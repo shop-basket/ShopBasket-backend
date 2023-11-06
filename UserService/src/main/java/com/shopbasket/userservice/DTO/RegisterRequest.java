@@ -1,4 +1,4 @@
-package com.shopbasket.userservice.Auth;
+package com.shopbasket.userservice.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,4 +14,5 @@ public class RegisterRequest {
     private String lastName;
     private String email;
     private String password;
+    private Integer phoneNo;
 }

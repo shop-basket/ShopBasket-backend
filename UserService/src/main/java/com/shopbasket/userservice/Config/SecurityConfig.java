@@ -22,7 +22,7 @@ public class SecurityConfig {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**")
+                .requestMatchers("/ShopBasket/api/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

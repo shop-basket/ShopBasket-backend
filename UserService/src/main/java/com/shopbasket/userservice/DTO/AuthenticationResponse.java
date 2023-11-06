@@ -1,4 +1,4 @@
-package com.shopbasket.userservice.Auth;
+package com.shopbasket.userservice.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationResponse {
     private String token;
+    private String message;
 }

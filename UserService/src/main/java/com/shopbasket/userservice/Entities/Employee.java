@@ -1,5 +1,6 @@
-package com.shopbasket.userservice.Users;
+package com.shopbasket.userservice.Entities;
 
+import com.shopbasket.userservice.Repository.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ import java.util.List;
 @Table(name="Employee")
 public class Employee implements UserDetails {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String firstName;
     private String lastName;
@@ -42,7 +43,7 @@ public class Employee implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.firstName+" "+this.lastName;
+        return this.email;
     }
 
     @Override
@@ -64,4 +65,5 @@ public class Employee implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

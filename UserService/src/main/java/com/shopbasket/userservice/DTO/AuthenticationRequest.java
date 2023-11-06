@@ -1,4 +1,4 @@
-package com.shopbasket.userservice.Auth;
+package com.shopbasket.userservice.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

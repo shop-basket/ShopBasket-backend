@@ -1,6 +1,6 @@
 package com.shopbasket.userservice.Config;
 
-import com.shopbasket.userservice.Users.EmployeeRepository;
+import com.shopbasket.userservice.Repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
