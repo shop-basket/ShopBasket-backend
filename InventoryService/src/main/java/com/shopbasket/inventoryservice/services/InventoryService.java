@@ -2,11 +2,9 @@ package com.shopbasket.inventoryservice.services;
 
 import com.shopbasket.inventoryservice.entities.Inventory;
 import com.shopbasket.inventoryservice.repositories.InventoryRepository;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.stereotype.Service;
 
 @Service
