@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor // allows to create an instance of the class without specifying any initial values for its fields.
 @AllArgsConstructor //useful for situations where you want to initialize all the fields at once.
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name="Employee")
 public class Employee implements UserDetails {
     @Id
