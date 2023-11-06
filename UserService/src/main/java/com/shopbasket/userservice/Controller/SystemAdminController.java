@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.*;
 public class SystemAdminController {
     @Autowired
     private final SystemAdminService systemAdminService;
-
     public SystemAdminController(SystemAdminService systemAdminService) {
         this.systemAdminService = systemAdminService;
     }
-
     @PostMapping("/createEmployee")
     public Employee createEmployee(@RequestBody EmployeeCreationResponse employeeCreationResponse ) {
         return systemAdminService.saveEmployee(employeeCreationResponse);

@@ -1,7 +1,6 @@
 package com.shopbasket.userservice.Service;
 
 import com.shopbasket.userservice.DTO.RegisterRequest;
-import com.shopbasket.userservice.Config.JwtService;
 import com.shopbasket.userservice.DTO.AuthenticationRequest;
 import com.shopbasket.userservice.DTO.AuthenticationResponse;
 import com.shopbasket.userservice.Entities.Employee;
@@ -20,11 +19,16 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserValidationService userValidationService;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        System.out.println("Request:");
+        System.out.println(request);
         var fetchEmployee = employeeRepository.findByEmail(request.getEmail());
         boolean notExistsEmployee = fetchEmployee.isEmpty();
-        if(notExistsEmployee){
+        boolean validCredentials = userValidationService.customerCredentialValidation(request);
+
+        if(notExistsEmployee && validCredentials){
             var employee = Employee.builder()
                     .firstName(request.getFirstName())
                     .lastName(request.getLastName())

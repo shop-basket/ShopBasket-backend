@@ -28,6 +28,8 @@ public class Employee implements UserDetails {
     private String email;
     private Integer phoneNo;
     private String password;
+    private String profileURL;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

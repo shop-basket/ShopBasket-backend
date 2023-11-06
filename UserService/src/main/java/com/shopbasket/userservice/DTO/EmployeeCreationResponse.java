@@ -17,5 +17,5 @@ public class EmployeeCreationResponse {
     private Integer phoneNo;
     @Enumerated(EnumType.STRING)
     private Role role;
-    String receivedJwtToken;
+    private String receivedJwtToken;
 }

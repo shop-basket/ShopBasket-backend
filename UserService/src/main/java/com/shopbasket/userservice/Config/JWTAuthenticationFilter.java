@@ -1,5 +1,6 @@
 package com.shopbasket.userservice.Config;
 
+import com.shopbasket.userservice.Service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
