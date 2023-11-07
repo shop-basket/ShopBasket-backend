@@ -3,6 +3,7 @@ package com.shopbasket.userservice.Service;
 import com.shopbasket.userservice.DTO.EmployeeCreationResponse;
 import com.shopbasket.userservice.Entities.Employee;
 import com.shopbasket.userservice.Repository.EmployeeRepository;
+import com.shopbasket.userservice.Repository.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,10 +31,10 @@ public class SystemAdminService {
                employeeDetails = Employee.builder()
                        .email(employeeCreationResponse.getEmail())
                        .firstName(employeeCreationResponse.getFirstName())
-                       .role(employeeCreationResponse.getRole())
                        .phoneNo(employeeCreationResponse.getPhoneNo())
                        .lastName(employeeCreationResponse.getLastName())
                        .password(passwordEncoder.encode(defaultPassword))
+                       .role(employeeCreationResponse.getRole())
                        .build();
                employeeRepository.save(employeeDetails);
            }

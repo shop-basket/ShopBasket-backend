@@ -2,6 +2,7 @@ package com.shopbasket.userservice.Service;
 
 
 import com.shopbasket.userservice.DTO.AuthenticationRequest;
+import com.shopbasket.userservice.DTO.CustomerRegisterRequest;
 import com.shopbasket.userservice.DTO.EmployeeCreationResponse;
 import com.shopbasket.userservice.DTO.RegisterRequest;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class UserValidationService extends CredentialValidation{
         return validInput;
     }
 
-    public boolean customerCredentialValidation(RegisterRequest request){
+    public boolean customerCredentialValidation(CustomerRegisterRequest request){
         boolean validInput = false;
 //       email validation
         boolean validEmail = emailValidation(request.getEmail());

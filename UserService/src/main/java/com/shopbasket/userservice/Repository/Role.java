@@ -5,5 +5,6 @@ public enum Role {
     WarehouseKeeper,
     DeliveryMan,
     Cashier,
-    SystemAdmin
+    SystemAdmin,
+    Customer
 }

@@ -1,5 +1,6 @@
 package com.shopbasket.userservice.Service;
 
+import com.shopbasket.userservice.Entities.Customer;
 import com.shopbasket.userservice.Entities.Employee;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -35,7 +36,7 @@ public class JwtService {
                 .claim("role", employee.getRole())
                 .claim("username", employee.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -68,4 +69,19 @@ public class JwtService {
         return role;
     }
 
+    public String generateTokenForCustomer(Customer customer) {
+        System.out.println("Customer from generate Token: "+customer);
+        return generateTokenForCustomer(new HashMap<>(),customer);
+    }
+    private  String generateTokenForCustomer(Map<String, Object> extraClaims, Customer customer) {
+        System.out.println("From generateToken 2 :"+customer);
+        return Jwts
+                .builder()
+                .setClaims(extraClaims)
+                .claim("username", customer.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
 }

@@ -2,71 +2,36 @@ package com.shopbasket.userservice.Entities;
 
 import com.shopbasket.userservice.Repository.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
-@Data  //automatically generates typical methods such as getters, setters
-@Builder //creating object of the class by using design pattern builder
-@NoArgsConstructor // allows to create an instance of the class without specifying any initial values for its fields.
-@AllArgsConstructor //useful for situations where you want to initialize all the fields at once.
+@Getter
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name="Employee")
-public class Employee implements UserDetails {
+@Table
+public class Employee extends Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private Integer phoneNo;
-    private String password;
-    private String profileURL;
-
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Builder
+    public Employee(String firstName, String lastName, String email, String password, Integer phoneNo, String profileURL, Role role) {
+        super(firstName, lastName, email, password, phoneNo, profileURL);
+        this.role=role;
+    }
+
+    public Employee() {
+        super();
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
 }

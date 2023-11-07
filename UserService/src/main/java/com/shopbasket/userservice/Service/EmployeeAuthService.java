@@ -7,6 +7,7 @@ import com.shopbasket.userservice.Entities.Employee;
 import com.shopbasket.userservice.Repository.EmployeeRepository;
 import com.shopbasket.userservice.Repository.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,22 +15,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class EmployeeAuthService {
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final UserValidationService userValidationService;
 
+//    TEMPORARY
     public AuthenticationResponse register(RegisterRequest request) {
-        System.out.println("Request:");
-        System.out.println(request);
         var fetchEmployee = employeeRepository.findByEmail(request.getEmail());
         boolean notExistsEmployee = fetchEmployee.isEmpty();
-        boolean validCredentials = userValidationService.customerCredentialValidation(request);
 
-        if(notExistsEmployee && validCredentials){
-            var employee = Employee.builder()
+    if(notExistsEmployee ){
+            var employee =Employee.builder()
                     .firstName(request.getFirstName())
                     .lastName(request.getLastName())
                     .email(request.getEmail())
@@ -37,6 +35,7 @@ public class AuthenticationService {
                     .role(Role.SystemAdmin)
                     .phoneNo(request.getPhoneNo())
                     .build();
+        System.out.println("Employee:::"+employee);
             employeeRepository.save(employee);
             var jwtToken = jwtService.generateToken(employee);
             return AuthenticationResponse.builder().token(jwtToken).build();
@@ -47,7 +46,7 @@ public class AuthenticationService {
         }
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse empAuthenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),

@@ -2,7 +2,7 @@ package com.shopbasket.userservice.Controller;
 
 import com.shopbasket.userservice.DTO.AuthenticationRequest;
 import com.shopbasket.userservice.DTO.AuthenticationResponse;
-import com.shopbasket.userservice.Service.AuthenticationService;
+import com.shopbasket.userservice.Service.EmployeeAuthService;
 import com.shopbasket.userservice.DTO.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,19 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/ShopBasket/api/auth")
 @RequiredArgsConstructor
-public class AuthenticationController {
-    private final AuthenticationService authenticationService;
-    @PostMapping("/register")
-    public ResponseEntity <AuthenticationResponse>register(
-            @RequestBody RegisterRequest request
-    ){
-        System.out.println("RequestBosy from controller: "+request);
-        return ResponseEntity.ok(authenticationService.register(request));
-    }
+public class EmployeeAuthController {
+    private final EmployeeAuthService employeeAuthService;
     @PostMapping("/authenticate")
-    public ResponseEntity <AuthenticationResponse>register(
+    public ResponseEntity <AuthenticationResponse>authenticate(
             @RequestBody AuthenticationRequest request
     ){
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+        return ResponseEntity.ok(employeeAuthService.empAuthenticate(request));
     }
 }
