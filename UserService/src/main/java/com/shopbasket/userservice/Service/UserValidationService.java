@@ -19,7 +19,7 @@ public class UserValidationService extends CredentialValidation{
 
 //      Phone number validation
         boolean validPhoneNo = phoneNoValidation(employeeCreationResponse.getPhoneNo());
-        System.out.println("validEmail:  "+validEmail+" Valid phoneNo: "+validPhoneNo);
+
         if(validEmail && validPhoneNo){
             validInput = true;
         }
@@ -33,7 +33,6 @@ public class UserValidationService extends CredentialValidation{
 
 //      Phone number validation
         boolean validPhoneNo = phoneNoValidation(request.getPhoneNo());
-        System.out.println("validEmail:  "+validEmail+" Valid phoneNo: "+validPhoneNo);
 
         if(validEmail && validPhoneNo){
             validInput = true;

@@ -1,14 +1,7 @@
 package com.shopbasket.userservice.Entities;
 
-import com.shopbasket.userservice.Repository.Role;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-
-import java.util.Collection;
-import java.util.List;
 
 @Getter
 @Entity
@@ -20,14 +13,15 @@ public class Customer extends Users{
     private String street;
     private String city;
     private String province;
-    private Integer ZIPCode;
+    private Integer zipCode;
     @Builder
-    public Customer(String firstName, String lastName, String email, String password, Integer phoneNo, String profileURL,String street, String city,String province,Integer ZIPCode) {
+    public Customer(String firstName, String lastName, String email, String password, Integer phoneNo,
+                    String profileURL,String street, String city,String province,Integer zipCode) {
         super(firstName, lastName, email, password, phoneNo, profileURL);
         this.street=street;
         this.city=city;
         this.province =province;
-        this.ZIPCode = ZIPCode;
+        this.zipCode = zipCode;
     }
     public Customer() {
         super();

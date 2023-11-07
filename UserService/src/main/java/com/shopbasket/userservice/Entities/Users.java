@@ -10,6 +10,7 @@ import java.util.Collection;
 
 @Data
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
