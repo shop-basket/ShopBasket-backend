@@ -1,17 +1,19 @@
 package com.shopbasket.userservice.Service;
 
-import com.shopbasket.userservice.DTO.AuthenticationRequest;
-import com.shopbasket.userservice.DTO.AuthenticationResponse;
-import com.shopbasket.userservice.DTO.CustomerRegisterRequest;
+import com.shopbasket.userservice.DTO.*;
 import com.shopbasket.userservice.Entities.Customer;
-import com.shopbasket.userservice.Entities.Employee;
 import com.shopbasket.userservice.Repository.CustomerRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +22,15 @@ public class CustomerService implements UserDetailsService {
     private final JwtService jwtService;
     private final UserValidationService userValidationService;
     private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return customerRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+    @Transactional
     public AuthenticationResponse customerAuthenticate(AuthenticationRequest request) {
         UserDetails user = loadUserByUsername(request.getEmail());
 
@@ -38,32 +43,11 @@ public class CustomerService implements UserDetailsService {
                     .build();
         }
     }
-
-//    public AuthenticationResponse customerAuthenticate(AuthenticationRequest request) {
-//        System.out.println("Customer Login from Service : ");
-//        System.out.println(request.getEmail()+request.getPassword());
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        request.getEmail(),
-//                        request.getPassword()
-//                )
-//        );
-//        System.out.println("_______________");
-//        System.out.println("before findByEmail"+request.getEmail());
-//        System.out.println(customerRepository.findByEmail(request.getEmail()));
-//        var customer = customerRepository.findByEmail(request.getEmail())
-//                .orElseThrow();
-//        System.out.println(customer);
-//        var jwtToken =  jwtService.generateTokenForCustomer(customer);
-//        System.out.println("Token: "+jwtToken);
-//        return AuthenticationResponse.builder().token(jwtToken).build();
-//    }
-
+    @Transactional
     public AuthenticationResponse customerRegister(CustomerRegisterRequest registerRequest) {
         var fetchCustomer = customerRepository.findByEmail(registerRequest.getEmail());
         boolean notExistsCustomer = fetchCustomer.isEmpty();
         boolean validCredentials = userValidationService.customerCredentialValidation(registerRequest);
-        System.out.println("zip code:"+registerRequest.getZIPCode());
 
         if(notExistsCustomer && validCredentials){
             var  customer = Customer.builder()
@@ -75,9 +59,8 @@ public class CustomerService implements UserDetailsService {
                     .street(registerRequest.getStreet())
                     .city(registerRequest.getCity())
                     .province(registerRequest.getProvince())
-                    .ZIPCode(registerRequest.getZIPCode())
+                    .zipCode(registerRequest.getZipCode())
                     .build();
-            System.out.println("Customer Register:"+customer);
             customerRepository.save(customer);
             var jwtToken = jwtService.generateTokenForCustomer(customer);
             return AuthenticationResponse.builder().token(jwtToken).build();
@@ -86,5 +69,27 @@ public class CustomerService implements UserDetailsService {
                     .message("User with this email is already registered")
                     .build();
         }
+    }
+    @Transactional
+    public MessageResponse changePassword(ChangePasswordRequest changePasswordRequest) {
+        // Retrieve the current user's details
+        Optional<Customer> customerOptional = customerRepository.findByEmail(changePasswordRequest.getEmail());
+
+        if (customerOptional.isEmpty()) {
+            return new MessageResponse("User not found");
+        }
+
+        Customer customer = customerOptional.get();
+
+        // Verify that the provided current password matches the stored current password
+        if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), customer.getPassword())) {
+            return new MessageResponse("Incorrect current password");
+        }
+
+        // Update the password with the new one
+        customer.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+        customerRepository.save(customer);
+
+        return new MessageResponse("Password changed successfully");
     }
 }

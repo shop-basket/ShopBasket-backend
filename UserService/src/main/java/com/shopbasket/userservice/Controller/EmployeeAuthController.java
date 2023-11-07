@@ -1,9 +1,7 @@
 package com.shopbasket.userservice.Controller;
 
-import com.shopbasket.userservice.DTO.AuthenticationRequest;
-import com.shopbasket.userservice.DTO.AuthenticationResponse;
+import com.shopbasket.userservice.DTO.*;
 import com.shopbasket.userservice.Service.EmployeeAuthService;
-import com.shopbasket.userservice.DTO.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,5 +19,12 @@ public class EmployeeAuthController {
             @RequestBody AuthenticationRequest request
     ){
         return ResponseEntity.ok(employeeAuthService.empAuthenticate(request));
+    }
+    @PostMapping("/changePassword")
+    public ResponseEntity<MessageResponse> changePassword(
+            @RequestBody ChangePasswordRequest changePasswordRequest
+    ){
+        System.out.println("changePassword:"+changePasswordRequest);
+        return ResponseEntity.ok(employeeAuthService.changePassword(changePasswordRequest));
     }
 }

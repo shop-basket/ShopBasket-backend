@@ -18,5 +18,5 @@ public class CustomerRegisterRequest {
     private String street;
     private String city;
     private String province;
-    private Integer ZIPCode;
+    private Integer zipCode;
 }

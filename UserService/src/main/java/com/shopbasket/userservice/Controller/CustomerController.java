@@ -1,11 +1,7 @@
 package com.shopbasket.userservice.Controller;
 
-import com.shopbasket.userservice.DTO.AuthenticationRequest;
-import com.shopbasket.userservice.DTO.AuthenticationResponse;
-import com.shopbasket.userservice.DTO.CustomerRegisterRequest;
-import com.shopbasket.userservice.DTO.RegisterRequest;
+import com.shopbasket.userservice.DTO.*;
 import com.shopbasket.userservice.Service.CustomerService;
-import com.shopbasket.userservice.Service.EmployeeAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +28,13 @@ public class CustomerController {
     public ResponseEntity<AuthenticationResponse> customerAuthenticate(
             @RequestBody AuthenticationRequest request
     ){
-        System.out.println("customer login:  "+request);
         return ResponseEntity.ok(customerService.customerAuthenticate(request));
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<MessageResponse> customerChangePassword(
+            @RequestBody ChangePasswordRequest changePasswordRequest
+    ){
+        return ResponseEntity.ok(customerService.changePassword(changePasswordRequest));
     }
 }
