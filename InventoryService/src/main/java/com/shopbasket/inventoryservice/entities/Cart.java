@@ -18,14 +18,11 @@ import java.util.List;
 public class Cart {
     @Id
     private String id;
-
-
     private String warehouseKeeperID;
-
+    private String deliveryManId;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<CartItem> cartItems;
-
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 

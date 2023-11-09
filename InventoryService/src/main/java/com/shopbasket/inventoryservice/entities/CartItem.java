@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    //Need to create the ID's from orderID
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "inventory_id")
