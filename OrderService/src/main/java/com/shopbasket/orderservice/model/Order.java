@@ -25,10 +25,11 @@ public class Order {
     @Column(name = "status")
     private OrderStatus status;
 
-    @OneToMany(mappedBy = "order",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<OrderedItem> items;
 
+    @Transient
     @Column(name = "total_amount")
     private Double totalAmount;
 
@@ -64,5 +65,17 @@ public class Order {
         this.deliveryAddress = deliveryAddress;
         this.deliveryDate = deliveryDate;
         this.cid = cid;
+    }
+
+    public Order(Long oid, Double totalAmount, String deliveryAddress, LocalDateTime deliveryDate, Long cid, Long omid, Long wkid, Long dpid, Long cshrid) {
+        this.oid = oid;
+        this.totalAmount = totalAmount;
+        this.deliveryAddress = deliveryAddress;
+        this.deliveryDate = deliveryDate;
+        this.cid = cid;
+        this.omid = omid;
+        this.wkid = wkid;
+        this.dpid = dpid;
+        this.cshrid = cshrid;
     }
 }

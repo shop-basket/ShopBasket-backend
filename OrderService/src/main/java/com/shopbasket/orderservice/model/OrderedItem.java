@@ -23,8 +23,8 @@ public class OrderedItem {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "oid",referencedColumnName = "oid")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "oid", referencedColumnName = "oid")
     @JsonBackReference
     private Order order;
 

@@ -36,16 +36,4 @@ public class OrderedItemService {
         return orderedItemRepository.save(item);
     }
 
-    public List<OrderedItem> addAllItems(Order createdOrder) {
-        List<OrderedItem> itemsToSave = createdOrder.getItems();
-        List<OrderedItem> savedItems = new ArrayList<>();
-
-        for (OrderedItem item : itemsToSave) {
-            item.setOrder(createdOrder);
-            savedItems.add(orderedItemRepository.save(item));
-        }
-
-        return savedItems;
-    }
-
 }

@@ -1,5 +1,6 @@
 package com.shopbasket.orderservice.controller;
 
+import com.shopbasket.orderservice.model.DeliveryOrderDTO;
 import com.shopbasket.orderservice.model.Order;
 import com.shopbasket.orderservice.model.OrderStatus;
 import com.shopbasket.orderservice.model.OrderedItem;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,16 +31,19 @@ public class OrderController {
         this.orderedItemService = orderedItemService;
     }
 
-    @GetMapping("/getOrder/{oid}")
-    public ResponseEntity<Order> getOrderByOid(@PathVariable Long oid){
+    @GetMapping("/getDeliveryOrder/{oid}")
+    public ResponseEntity<DeliveryOrderDTO> getDeliveryOrderByOid(@PathVariable Long oid){
         Order order = orderService.getOrderByOid(oid);
-        return ResponseEntity.ok(order);
+        DeliveryOrderDTO deliveryOrder = new DeliveryOrderDTO(order.getOid(), order.getTotalAmount(), order.getDeliveryAddress(), order.getDeliveryDate(), order.getCid(), order.getOmid(), order.getWkid(), order.getDpid(), order.getCshrid());
+        return ResponseEntity.ok(deliveryOrder);
     }
 
     @PostMapping("/create")
     public ResponseEntity<Order> createOrder(@RequestBody Order order){
         Order createdOrder = orderService.createOrder(order);
-        orderedItemService.addAllItems(createdOrder);
+        if (createdOrder == null){
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
 
@@ -73,7 +78,7 @@ public class OrderController {
         return ResponseEntity.ok(updatedOrder);
     }
 
-    @PutMapping("/setOM/{oid}")
+    @PutMapping("/setWK/{oid}")
     public ResponseEntity<Order> setWarehouseKeeper(@PathVariable Long oid, @RequestParam Long eid) {
         if (oid == null || eid == null) {
             return ResponseEntity.badRequest().build();
@@ -85,7 +90,7 @@ public class OrderController {
         return ResponseEntity.ok(updatedOrder);
     }
 
-    @PutMapping("/setOM/{oid}")
+    @PutMapping("/setDP/{oid}")
     public ResponseEntity<Order> setDeliveryPerson(@PathVariable Long oid, @RequestParam Long eid) {
         if (oid == null || eid == null) {
             return ResponseEntity.badRequest().build();
@@ -97,7 +102,7 @@ public class OrderController {
         return ResponseEntity.ok(updatedOrder);
     }
 
-    @PutMapping("/setOM/{oid}")
+    @PutMapping("/setCshr/{oid}")
     public ResponseEntity<Order> setCashier(@PathVariable Long oid, @RequestParam Long eid) {
         if (oid == null || eid == null) {
             return ResponseEntity.badRequest().build();

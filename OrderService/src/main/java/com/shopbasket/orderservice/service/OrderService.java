@@ -1,5 +1,7 @@
 package com.shopbasket.orderservice.service;
 
+import com.shopbasket.orderservice.exception.CustomNotFoundException;
+import com.shopbasket.orderservice.exception.TotalAmountException;
 import com.shopbasket.orderservice.feign.ProductInterface;
 import com.shopbasket.orderservice.model.Order;
 import com.shopbasket.orderservice.model.OrderStatus;
@@ -7,10 +9,9 @@ import com.shopbasket.orderservice.model.OrderedItem;
 import com.shopbasket.orderservice.repository.OrderRepository;
 import jakarta.ws.rs.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +33,12 @@ public class OrderService {
         return totalAmount;
     }
 
+    @Transactional
     public Order createOrder(Order order) {
         Double totalAmount = calculateTotalAmount(order.getItems());
+        if (totalAmount < 0) {
+            throw new TotalAmountException("Total amount cannot be negative.");
+        }
         order.setTotalAmount(totalAmount);
         return orderRepository.save(order);
     }
@@ -106,6 +111,7 @@ public class OrderService {
     }
 
     public Order getOrderByOid(Long oid) {
-        return orderRepository.findById(oid).orElseThrow(() -> new NotFoundException("Order not found with ID: " + oid));
+        return orderRepository.findById(oid)
+                .orElseThrow(() -> new CustomNotFoundException("Order with ID " + oid + " not found"));
     }
 }
