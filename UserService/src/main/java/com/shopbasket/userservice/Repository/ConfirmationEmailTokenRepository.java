@@ -1,6 +1,6 @@
 package com.shopbasket.userservice.Repository;
 
-import com.shopbasket.userservice.Entities.Customer;
+import com.shopbasket.userservice.Entities.ConfirmationEmailToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Integer> {
-    Optional<Customer> findByEmail(String email);
+public interface ConfirmationEmailTokenRepository extends JpaRepository<ConfirmationEmailToken,Long> {
+    Optional<ConfirmationEmailToken> findByToken(String token);
 
     @Transactional
     @Modifying
-    @Query("UPDATE Customer c " +
-            "SET c.enabled = true " +
-            "WHERE c.id = ?1")
-    int updateEnabled(Integer id);
+    @Query("UPDATE ConfirmationEmailToken c " +
+            "SET c.confirmedAt = ?2 " +
+            "WHERE c.token = ?1")
+    int updateConfirmedAt(String token, LocalDateTime confirmedAt);
 }

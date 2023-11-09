@@ -69,16 +69,14 @@ public class JwtService {
         return role;
     }
 
-    public String generateTokenForCustomer(Customer customer) {
-        System.out.println("Customer from generate Token: "+customer);
+    public String generateTokenForCustomer(String customer) {
         return generateTokenForCustomer(new HashMap<>(),customer);
     }
-    private  String generateTokenForCustomer(Map<String, Object> extraClaims, Customer customer) {
-        System.out.println("From generateToken 2 :"+customer);
+    private  String generateTokenForCustomer(Map<String, Object> extraClaims, String customer) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .claim("username", customer.getUsername())
+                .claim("username", customer)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)

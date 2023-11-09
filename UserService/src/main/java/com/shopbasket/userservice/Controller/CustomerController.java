@@ -5,10 +5,7 @@ import com.shopbasket.userservice.Service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/ShopBasket/api/customerAuth")
@@ -36,5 +33,9 @@ public class CustomerController {
             @RequestBody ChangePasswordRequest changePasswordRequest
     ){
         return ResponseEntity.ok(customerService.changePassword(changePasswordRequest));
+    }
+    @GetMapping(path = "/confirm")
+    public String confirm(@RequestParam("token") String token) {
+        return customerService.confirmToken(token);
     }
 }

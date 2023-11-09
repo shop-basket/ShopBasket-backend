@@ -4,10 +4,7 @@ import com.shopbasket.userservice.DTO.*;
 import com.shopbasket.userservice.Service.EmployeeAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/ShopBasket/api/auth")
@@ -26,5 +23,9 @@ public class EmployeeAuthController {
     ){
         System.out.println("changePassword:"+changePasswordRequest);
         return ResponseEntity.ok(employeeAuthService.changePassword(changePasswordRequest));
+    }
+    @GetMapping(path = "/confirm")
+    public String confirm(@RequestParam("token") String token) {
+        return employeeAuthService.confirmToken(token);
     }
 }
