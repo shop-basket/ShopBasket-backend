@@ -38,7 +38,7 @@ public class ProductService {
 
         return productRepository.save(product);
      }
-     // Bussiness Logic for Fetching all Products
+     // Bussiness Logic for Fetching products by SkuCode
         public Product getProduct(String skuCode) {
             return productRepository.findById(skuCode).orElse(null);
         }
@@ -77,5 +77,15 @@ public class ProductService {
         }
     }
 
+
+    //Fetching All Products and View Details
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    //Category wise Filter Products
+    public List<Product> getProductsByCategory(ProductCategory category) {
+        return productRepository.findByCategory(category);
+    }
 
 }

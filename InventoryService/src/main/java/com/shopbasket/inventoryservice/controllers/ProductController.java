@@ -1,6 +1,7 @@
 package com.shopbasket.inventoryservice.controllers;
 
 import com.shopbasket.inventoryservice.dto.ProductRequest;
+import com.shopbasket.inventoryservice.entities.Product;
 import com.shopbasket.inventoryservice.enums.ProductCategory;
 import com.shopbasket.inventoryservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +42,32 @@ public class ProductController {
     @DeleteMapping("/{skuCode}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> deleteProduct(@PathVariable String skuCode) {
+        Product product = productService.getProduct(skuCode);
 
-        String productName = productService.getProduct(skuCode).getProductName();
+        if (product == null) {
+            // Product with the given SKU code doesn't exist
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with SKU code " + skuCode + " not found.");
+        }
+
+        String productName = product.getProductName();
         productService.deleteProduct(skuCode);
         return ResponseEntity.ok("Product with SKU code " + productName + " has been successfully deleted.");
+    }
+    // get product Details by SkuCode
+    @GetMapping("/{skuCode}")
+    @ResponseStatus(HttpStatus.OK)
+    public Product getProduct(@PathVariable String skuCode) {
+        return productService.getProduct(skuCode);
+    }
+    // Get All Product Details
+    @GetMapping ("/")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Product> getAllProducts() {
+        return productService.getAllProducts();
+    }
+    @GetMapping("/filter")
+    public List<Product> getProductsByCategory(@RequestParam("category") ProductCategory category) {
+        return productService.getProductsByCategory(category);
     }
 
 
