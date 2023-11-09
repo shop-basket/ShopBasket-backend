@@ -1,6 +1,7 @@
 package com.ShopBasket.deliveryservice.model;
 
 
+import com.ShopBasket.deliveryservice.enums.DeliveryStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,12 +21,10 @@ public class Delivery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long courierId;
+    private Long orderManagerId;
     private Long orderId;
     private Date date;
-    private String destination;
-    private String status;
-
-
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus status = DeliveryStatus.ACCEPTED;
 }
