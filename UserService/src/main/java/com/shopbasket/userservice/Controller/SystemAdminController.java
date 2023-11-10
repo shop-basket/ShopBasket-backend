@@ -4,6 +4,7 @@ import com.shopbasket.userservice.DTO.AuthenticationResponse;
 import com.shopbasket.userservice.DTO.CustomerRegisterRequest;
 import com.shopbasket.userservice.DTO.EmployeeCreationResponse;
 import com.shopbasket.userservice.DTO.RegisterRequest;
+import com.shopbasket.userservice.Repository.Role;
 import com.shopbasket.userservice.Service.CustomerService;
 import com.shopbasket.userservice.Service.EmployeeAuthService;
 import com.shopbasket.userservice.Service.SystemAdminService;
@@ -25,9 +26,17 @@ public class SystemAdminController {
         this.systemAdminService = systemAdminService;
     }
     @PostMapping("/createEmployee")
-    public Employee createEmployee(@RequestBody EmployeeCreationResponse employeeCreationResponse ) {
-        return systemAdminService.saveEmployee(employeeCreationResponse);
+    public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeCreationResponse employeeCreationResponse ) {
+        return ResponseEntity.ok(systemAdminService.saveEmployee(employeeCreationResponse));
     }
+
+    @PutMapping("/modifyUsers/{id}")
+    public ResponseEntity<String> modifyUsers(@PathVariable("id") Integer id,
+                                              @RequestParam("token") String token,
+                                              @RequestParam("newRole") Role newRole){
+        return ResponseEntity.ok(systemAdminService.modifyUsers(id,token, newRole));
+    }
+
 //    TEMPORARY
     @PostMapping("/addAdmin")
     public ResponseEntity<AuthenticationResponse> register(

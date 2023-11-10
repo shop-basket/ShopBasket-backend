@@ -7,21 +7,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 @Getter
 @Entity
 @Table
 public class Employee extends Users {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
-    public Employee(String firstName, String lastName, String email, String password, Integer phoneNo, String profileURL, Role role) {
-        super(firstName, lastName, email, password, phoneNo, profileURL);
+    public Employee(Integer id,String firstName, String lastName, String email, String password, Integer phoneNo,
+                    String profileURL, boolean enabled,Role role) {
+        super(id,firstName, lastName, email, password, phoneNo, profileURL,enabled);
         this.role=role;
     }
 
@@ -29,9 +27,9 @@ public class Employee extends Users {
         super();
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role.name());
+        return Collections.singleton(simpleGrantedAuthority);
     }
 }

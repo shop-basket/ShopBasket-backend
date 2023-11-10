@@ -1,7 +1,6 @@
 package com.shopbasket.userservice.Entities;
 
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,13 +14,17 @@ import java.util.Collection;
 @NoArgsConstructor
 @MappedSuperclass
 public class Users implements UserDetails {
+    @Id
+    @GeneratedValue
+    private Integer id;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
+    @Column(length = 15)
     private Integer phoneNo;
     private String profileURL;
-
+    private boolean enabled = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -55,6 +58,8 @@ public class Users implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
+
+
 }
