@@ -9,7 +9,6 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -67,7 +66,7 @@ public class CustomerService implements UserDetailsService {
                     customer.get().getEmail()
             );
             String fullName = customer.get().getFirstName() + " " + customer.get().getLastName();
-            String link = "http://localhost:8080/ShopBasket/api/customerAuth/confirm?token="+token;
+            String link = "http://localhost:8089/ShopBasket/api/customerAuth/confirm?token="+token;
             emailSender.send(customer.get().getEmail(), emailService.buildEmail(fullName, link));
 
             confirmationEmailTokenService.saveConfirmationToken(confirmationEmailToken);
@@ -105,7 +104,7 @@ public class CustomerService implements UserDetailsService {
                     customer.getEmail()
             );
             String fullName = registerRequest.getFirstName() + " " + registerRequest.getLastName();
-            String link = "http://localhost:8080/ShopBasket/api/customerAuth/confirm?token="+token;
+            String link = "http://localhost:8089/ShopBasket/api/customerAuth/confirm?token="+token;
             emailSender.send(registerRequest.getEmail(), emailService.buildEmail(fullName, link));
 
             confirmationEmailTokenService.saveConfirmationToken(confirmationEmailToken);
@@ -126,7 +125,7 @@ public class CustomerService implements UserDetailsService {
                         fetchCustomer.get().getEmail()
                 );
                 String fullName = registerRequest.getFirstName() + " " + registerRequest.getLastName();
-                String link = "http://localhost:8080/ShopBasket/api/customerAuth/confirm?token="+token;
+                String link = "http://localhost:8089/ShopBasket/api/customerAuth/confirm?token="+token;
                 emailSender.send(registerRequest.getEmail(), emailService.buildEmail(fullName, link));
 
                 confirmationEmailTokenService.saveConfirmationToken(confirmationEmailToken);
@@ -228,15 +227,10 @@ public class CustomerService implements UserDetailsService {
                 throw new IllegalStateException("User not found");
             }
 
-            System.out.println("cutomer from deleting: "+customerOptional);
+            System.out.println("customer from deleting: "+customerOptional);
             Customer customer = customerOptional.get();
 
             if (passwordEncoder.matches(password, customer.getPassword())) {
-//                customerRepository.findById(id);
-//                Optional<ConfirmationEmailToken> confirmationEmailToken = confirmationEmailTokenRepository.findByUserId(id);
-//                if(confirmationEmailToken.isPresent()){
-//                    confirmationEmailTokenRepository.deleteByEmail(customer.getEmail());
-//                }
                 customerRepository.deleteById(id);
                 return "Deleted successfully";
             } else {

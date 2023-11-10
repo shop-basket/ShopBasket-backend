@@ -14,8 +14,7 @@ import java.util.Optional;
 public interface ConfirmationEmailTokenRepository extends JpaRepository<ConfirmationEmailToken,Long> {
     Optional<ConfirmationEmailToken> findByToken(String token);
 
-    Optional<ConfirmationEmailToken> findByUserId(Integer id);
-    Optional<ConfirmationEmailToken> deleteByEmail(String  email);
+    Optional<ConfirmationEmailToken> deleteAllByEmail(String  email);
 
     @Transactional
     @Modifying
@@ -24,4 +23,5 @@ public interface ConfirmationEmailTokenRepository extends JpaRepository<Confirma
             "WHERE c.token = ?1")
     int updateConfirmedAt(String token, LocalDateTime confirmedAt);
 
+    Optional<ConfirmationEmailToken> findByEmail(String email);
 }

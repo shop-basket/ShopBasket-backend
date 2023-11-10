@@ -60,7 +60,7 @@ public class EmployeeAuthService {
                     employee.getEmail()
             );
             String fullName = employee.getFirstName() + " " + employee.getLastName();
-            String link = "http://localhost:8080/ShopBasket/api/auth/confirm?token="+token;
+            String link = "http://localhost:8089/ShopBasket/api/auth/confirm?token="+token;
             emailSender.send(employee.getEmail(), emailService.buildEmail(fullName, link));
 
             confirmationEmailTokenService.saveConfirmationToken(confirmationEmailToken);
@@ -101,7 +101,7 @@ public class EmployeeAuthService {
                         employee.getEmail()
                 );
                 String fullName = employee.getFirstName() + " " + employee.getLastName();
-                String link = "http://localhost:8080/ShopBasket/api/auth/confirm?token="+token;
+                String link = "http://localhost:8089/ShopBasket/api/auth/confirm?token="+token;
                 emailSender.send(employee.getEmail(), emailService.buildEmail(fullName, link));
                 confirmationEmailTokenService.saveConfirmationToken(confirmationEmailToken);
             }
@@ -189,7 +189,8 @@ public class EmployeeAuthService {
         try {
             Optional<Employee> employeeOptional = employeeRepository.findById(id);
             String role = String.valueOf(Role.SystemAdmin);
-            if(employeeOptional.get().getRole().equals(role)) {
+
+            if(!(employeeOptional.get().getRole().toString() == role)) {
                 if (employeeOptional.isEmpty()) {
                     throw new IllegalStateException("User not found");
                 }
@@ -198,10 +199,6 @@ public class EmployeeAuthService {
 
                 if (passwordEncoder.matches(password, employee.getPassword())) {
                     employeeRepository.deleteById(id);
-//                    Optional<ConfirmationEmailToken> confirmationEmailToken = confirmationEmailTokenRepository.findByUserId(id);
-//                    if (confirmationEmailToken.isPresent()) {
-//                        confirmationEmailTokenRepository.deleteByEmail(employee.getEmail());
-//                    }
                     return "Deleted successfully";
                 } else {
                     return "Password is incorrect";
@@ -209,8 +206,55 @@ public class EmployeeAuthService {
             }else{
                 return "System Admin account can't be deleted!";
             }
-        } catch (Exception e) {
+        } catch (IllegalStateException e) {
             return e.getMessage();
         }
     }
+
+//    public String forgetPassword(String email) {
+//        try {
+//            Optional<Employee> employee = employeeRepository.findByEmail(email);
+//
+//            if (employee.isPresent()) {
+//                    if(employee.get().isEnabled()){
+//                        //  generating token
+//                        String token = UUID.randomUUID().toString();
+//                        ConfirmationEmailToken confirmationEmailToken =  new ConfirmationEmailToken(
+//                                token,
+//                                LocalDateTime.now(),
+//                                LocalDateTime.now().plusMinutes(15),
+//                                employee.get().getId(),
+//                                employee.get().getEmail()
+//                        );
+//                        String fullName = employee.get().getFirstName() + " " + employee.get().getLastName();
+//                        String link = "http://localhost:8089/ShopBasket/api/auth/resetPassword?token="+token;
+//                        emailSender.send(authenticationRequest.getEmail(), emailService.buildEmail(fullName, link));
+//                        confirmationEmailTokenService.saveConfirmationToken(confirmationEmailToken);
+//                    }else{
+//                        throw new IllegalStateException("Please verify your account");
+//                    }
+//            } else {
+//                throw new IllegalStateException("Employee not found");
+//            }
+//            return "Password reset successfully";
+//        }catch (IllegalStateException e){
+//            return e.getMessage();
+//        }
+//    }
+//    public String forgetPasswordConfirmToken(String token){
+//        try {
+//            ConfirmationEmailToken confirmationEmailToken = confirmationEmailTokenService.getToken(token)
+//                    .orElseThrow(() -> new IllegalStateException("token not found"));
+//            LocalDateTime expiredAt = confirmationEmailToken.getExpiresAt();
+//
+//            if (expiredAt.isBefore(LocalDateTime.now())) {
+//                throw new IllegalStateException("token expired");
+//            }
+//            confirmationEmailTokenService.setConfirmedAt(token);
+//
+//            return "confirmed";
+//        }catch (IllegalStateException e){
+//            return e.getMessage();
+//        }
+//    }
 }

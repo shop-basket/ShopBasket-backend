@@ -33,10 +33,13 @@ public class EmployeeAuthController {
                             @RequestParam("password") String password){
         return ResponseEntity.ok(employeeAuthService.deleteAcc(id,password));
     }
-
     @PutMapping(path = "/updateProfile/{id}")
     public ResponseEntity<String> updateProfile(@PathVariable("id") Integer id,
                                                 @RequestBody EmployeeUpdateProfile employeeUpdateProfile){
         return ResponseEntity.ok(employeeAuthService.updateProfile(id,employeeUpdateProfile));
     }
+//    @PostMapping("/forgetPassword")
+//    public ResponseEntity<String > forgetPassword(@RequestBody String email){
+//        return ResponseEntity.ok(employeeAuthService.forgetPassword(email));
+//    }
 }
