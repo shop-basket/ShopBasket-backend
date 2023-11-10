@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
+@Setter
 @Entity
 @Table
 public class Customer extends Users{
@@ -13,8 +14,8 @@ public class Customer extends Users{
     private Integer zipCode;
     @Builder
     public Customer(Integer id,String firstName, String lastName, String email, String password, Integer phoneNo,
-                    String profileURL,boolean locked, boolean enabled,String street, String city,String province,Integer zipCode) {
-        super(id, firstName, lastName, email, password, phoneNo, profileURL, enabled,locked);
+                    String profileURL,boolean enabled,String street, String city,String province,Integer zipCode) {
+        super(id, firstName, lastName, email, password, phoneNo, profileURL, enabled);
         this.street=street;
         this.city=city;
         this.province =province;

@@ -25,7 +25,18 @@ public class EmployeeAuthController {
         return ResponseEntity.ok(employeeAuthService.changePassword(changePasswordRequest));
     }
     @GetMapping(path = "/confirm")
-    public String confirm(@RequestParam("token") String token) {
-        return employeeAuthService.confirmToken(token);
+    public ResponseEntity<String> confirm(@RequestParam("token") String token) {
+        return ResponseEntity.ok(employeeAuthService.confirmToken(token));
+    }
+    @DeleteMapping(path = "/deleteAcc/{id}")
+    public ResponseEntity<String> deleteAcc(@PathVariable("id") Integer id,
+                            @RequestParam("password") String password){
+        return ResponseEntity.ok(employeeAuthService.deleteAcc(id,password));
+    }
+
+    @PutMapping(path = "/updateProfile/{id}")
+    public ResponseEntity<String> updateProfile(@PathVariable("id") Integer id,
+                                                @RequestBody EmployeeUpdateProfile employeeUpdateProfile){
+        return ResponseEntity.ok(employeeAuthService.updateProfile(id,employeeUpdateProfile));
     }
 }

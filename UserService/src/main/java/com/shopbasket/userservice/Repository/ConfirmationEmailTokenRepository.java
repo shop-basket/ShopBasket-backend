@@ -14,10 +14,14 @@ import java.util.Optional;
 public interface ConfirmationEmailTokenRepository extends JpaRepository<ConfirmationEmailToken,Long> {
     Optional<ConfirmationEmailToken> findByToken(String token);
 
+    Optional<ConfirmationEmailToken> findByUserId(Integer id);
+    Optional<ConfirmationEmailToken> deleteByEmail(String  email);
+
     @Transactional
     @Modifying
     @Query("UPDATE ConfirmationEmailToken c " +
             "SET c.confirmedAt = ?2 " +
             "WHERE c.token = ?1")
     int updateConfirmedAt(String token, LocalDateTime confirmedAt);
+
 }

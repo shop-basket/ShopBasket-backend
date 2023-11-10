@@ -20,4 +20,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
             "SET c.enabled = true " +
             "WHERE c.id = ?1")
     int updateEnabled(Integer id);
+
+    Optional<Customer> deleteByEmail(String email);
 }

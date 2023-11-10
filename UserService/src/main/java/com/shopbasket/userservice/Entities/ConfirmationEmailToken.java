@@ -22,16 +22,17 @@ public class ConfirmationEmailToken {
     @Column(nullable = false)
     private LocalDateTime expiresAt;
     private LocalDateTime confirmedAt;
-//    @ManyToOne
+    //    @ManyToOne
 //    @JoinColumn(nullable = false, name = "user_id")
     private Integer userId;
+    private String  email;
 
     public ConfirmationEmailToken(String token, LocalDateTime createdAt,
-                                  LocalDateTime expiresAt,Integer userId) {
+                                  LocalDateTime expiresAt,Integer userId, String email) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
         this.userId = userId;
+        this.email = email;
     }
 }
-

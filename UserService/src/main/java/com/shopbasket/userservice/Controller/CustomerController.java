@@ -14,28 +14,38 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @PostMapping("/register")
+    @PostMapping(path = "/register")
     public ResponseEntity <AuthenticationResponse>register(
             @RequestBody CustomerRegisterRequest request
     ){
         return ResponseEntity.ok(customerService.customerRegister(request));
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping(path = "/authenticate")
     public ResponseEntity<AuthenticationResponse> customerAuthenticate(
             @RequestBody AuthenticationRequest request
     ){
         return ResponseEntity.ok(customerService.customerAuthenticate(request));
     }
 
-    @PostMapping("/changePassword")
+    @PostMapping(path = "/changePassword")
     public ResponseEntity<MessageResponse> customerChangePassword(
             @RequestBody ChangePasswordRequest changePasswordRequest
     ){
         return ResponseEntity.ok(customerService.changePassword(changePasswordRequest));
     }
     @GetMapping(path = "/confirm")
-    public String confirm(@RequestParam("token") String token) {
-        return customerService.confirmToken(token);
+    public ResponseEntity<String> confirmToken(@RequestParam("token") String token) {
+        return ResponseEntity.ok(customerService.confirmToken(token));
+    }
+    @DeleteMapping(path = "/deleteAcc/{id}")
+    public ResponseEntity<String> deleteAcc(@PathVariable("id") Integer id,
+                            @RequestParam("password") String password){
+        return ResponseEntity.ok(customerService.deleteAcc(id,password));
+    }
+    @PutMapping(path = "/updateProfile/{id}")
+    public ResponseEntity<String> updateProfile(@PathVariable("id") Integer id,
+                                                @RequestBody CustomerUpdateProfile customerUpdateProfile){
+        return ResponseEntity.ok(customerService.updateProfile(id,customerUpdateProfile));
     }
 }

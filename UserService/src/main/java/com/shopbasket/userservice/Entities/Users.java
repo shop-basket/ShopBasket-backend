@@ -24,7 +24,6 @@ public class Users implements UserDetails {
     @Column(length = 15)
     private Integer phoneNo;
     private String profileURL;
-    private boolean locked = false;
     private boolean enabled = false;
 
     @Override
@@ -49,7 +48,7 @@ public class Users implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !this.locked;
+        return true;
     }
 
     @Override

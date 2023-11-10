@@ -18,8 +18,8 @@ public class Employee extends Users {
 
     @Builder
     public Employee(Integer id,String firstName, String lastName, String email, String password, Integer phoneNo,
-                    String profileURL, boolean locked, boolean enabled,Role role) {
-        super(id,firstName, lastName, email, password, phoneNo, profileURL, locked,enabled);
+                    String profileURL, boolean enabled,Role role) {
+        super(id,firstName, lastName, email, password, phoneNo, profileURL,enabled);
         this.role=role;
     }
 

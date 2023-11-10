@@ -17,4 +17,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
             "SET e.enabled = true " +
             "WHERE e.id = ?1")
     int updateEnabled(Integer id);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Employee e " +
+            "SET e.role = ?2 " +
+            "WHERE e.id = ?1")
+    void updateRole(Integer id, Enum role);
 }
