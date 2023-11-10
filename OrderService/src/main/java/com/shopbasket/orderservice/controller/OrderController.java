@@ -1,9 +1,7 @@
 package com.shopbasket.orderservice.controller;
 
-import com.shopbasket.orderservice.model.DeliveryOrderDTO;
-import com.shopbasket.orderservice.model.Order;
-import com.shopbasket.orderservice.model.OrderStatus;
-import com.shopbasket.orderservice.model.OrderedItem;
+import com.shopbasket.orderservice.feign.NotificationInterface;
+import com.shopbasket.orderservice.model.*;
 import com.shopbasket.orderservice.service.OrderService;
 
 import com.shopbasket.orderservice.service.OrderedItemService;
@@ -24,6 +22,7 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderedItemService orderedItemService;
+    NotificationInterface notificationInterface;
 
     @Autowired
     public OrderController(OrderService orderService, OrderedItemService orderedItemService) {
@@ -132,7 +131,6 @@ public class OrderController {
         return ResponseEntity.badRequest().build();
     }
 
-
     @GetMapping("/showCart/{cid}")
     public ResponseEntity<List<Order>> showCart(@PathVariable Long cid){
         List<Order> orders = orderService.getOrderByCid(cid);
@@ -140,8 +138,22 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
         List<Order> myCart = orders.stream()
-                .filter(order -> order.getStatus() != OrderStatus.DELIVERED)
+                .filter(order -> order.getStatus() != OrderStatus.PAID)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(myCart);
+    }
+
+    @GetMapping("/getOrder/{oid}")
+    public ResponseEntity<Order> getOrderByOid(@PathVariable Long oid){
+        Order order = orderService.getOrderByOid(oid);
+        return ResponseEntity.ok(order);
+    }
+
+    @PostMapping("/assign/{orderId}")
+    public ResponseEntity<String> assignWarehouseKeeper(@PathVariable Long orderId, @RequestParam Long warehouseKeeperId) {
+        orderService.getOrderByOid(orderId).setWkid(warehouseKeeperId);
+        NotificationRequest notificationRequest = new NotificationRequest(orderId, warehouseKeeperId, "You have a new order. Do you accept?");
+        notificationInterface.sendNotification(notificationRequest);
+        return ResponseEntity.ok("Warehouse keeper notified");
     }
 }
