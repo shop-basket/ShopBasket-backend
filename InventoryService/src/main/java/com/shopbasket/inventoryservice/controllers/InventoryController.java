@@ -1,6 +1,7 @@
 package com.shopbasket.inventoryservice.controllers;
 
 import com.shopbasket.inventoryservice.dto.InventoryRequestDTO;
+import com.shopbasket.inventoryservice.dto.OrderRequestDTO;
 import com.shopbasket.inventoryservice.dto.ProductQuantityDetailsResponse;
 import com.shopbasket.inventoryservice.services.InventoryService;
 import com.shopbasket.inventoryservice.services.UpdateStock.InventoryCommand;
@@ -25,6 +26,7 @@ public class InventoryController {
         inventoryService.addInventory(inventoryRequestDTO);
         return ResponseEntity.ok("Inventory has been successfully added.");
     }
+
     @PutMapping({"/{inventoryBatchId}/updateStockQuantity/{quantity}"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> updateStockQuantity(@PathVariable String inventoryBatchId, @PathVariable Integer quantity) {
@@ -34,14 +36,13 @@ public class InventoryController {
     }
 
 
-
-
-        @GetMapping("/{inventoryBatchId}/getCurrentQuantity")
+    @GetMapping("/{inventoryBatchId}/getCurrentQuantity")
     @ResponseStatus(HttpStatus.OK)
     public Integer getCurrentQuantity(@PathVariable String inventoryBatchId) {
         return inventoryService.getCurrentQuantity(inventoryBatchId);
 
     }
+
     @GetMapping("/totalQuantity/{skuCode}")
     public Integer getTotalQuantityBySkuCode(@PathVariable String skuCode) {
         Integer totalQuantity = inventoryService.calculateTotalQuantityBySkuCode(skuCode);
@@ -53,6 +54,18 @@ public class InventoryController {
     public ProductQuantityDetailsResponse getProductQuantityDetails(@PathVariable String skuCode) {
         return inventoryService.getProductQuantityDetails(skuCode);
     }
+
+    @PostMapping("/check-order")
+    public ResponseEntity<String> prepareAndCheckOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
+        // Check if all ordered items are in stock
+        if (inventoryService.areItemsInStock(orderRequestDTO)) {
+//            inventoryService.prepareOrder(orderRequestDTO);
+            return ResponseEntity.ok("Order is prepared and ready for further processing.");
+        } else {
+            return ResponseEntity.ok("Some items in the order are out of stock.");
+        }
+    }
+
 
 
 }

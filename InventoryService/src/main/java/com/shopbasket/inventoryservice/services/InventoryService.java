@@ -1,6 +1,8 @@
 package com.shopbasket.inventoryservice.services;
 
 import com.shopbasket.inventoryservice.dto.InventoryRequestDTO;
+import com.shopbasket.inventoryservice.dto.OrderItemDTO;
+import com.shopbasket.inventoryservice.dto.OrderRequestDTO;
 import com.shopbasket.inventoryservice.dto.ProductQuantityDetailsResponse;
 import com.shopbasket.inventoryservice.entities.Inventory;
 import com.shopbasket.inventoryservice.entities.Product;
@@ -94,5 +96,16 @@ public class InventoryService {
                 .quantity(totalQuantity)
                 .build();
         return productQuantityDetailsResponse;
+    }
+    public boolean areItemsInStock(OrderRequestDTO orderRequest) {
+        for (OrderItemDTO orderItem : orderRequest.getOrderItems()) {
+            String skuCode = orderItem.getSkuCode();
+            int orderedQuantity = orderItem.getOrderedQuantity();
+            int availableQuantity = calculateTotalQuantityBySkuCode(skuCode);
+            if (orderedQuantity > availableQuantity) {
+                return false;
+            }
+        }
+        return true;
     }
 }

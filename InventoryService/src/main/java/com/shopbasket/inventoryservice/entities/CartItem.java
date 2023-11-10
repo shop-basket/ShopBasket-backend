@@ -11,10 +11,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
+@Table(name = "cart_item")
 public class CartItem {
     @Id
     //Need to create the ID's from orderID
     private String id;
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
 
     @ManyToOne
     @JoinColumn(name = "inventory_id")
