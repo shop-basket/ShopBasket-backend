@@ -26,10 +26,10 @@ public class OrderedItemService {
         this.orderService = orderService;
     }
 
-    public ResponseEntity<ProductWrapper> getProduct(String skuCode){
-        ResponseEntity<ProductWrapper> product = productInterface.getProductBySkuCode(skuCode);
-        return product;
-    }
+//    public ResponseEntity<ProductWrapper> getProduct(String skuCode){
+//        ResponseEntity<ProductWrapper> product = productInterface.getProductBySkuCode(skuCode);
+//        return product;
+//    }
 
     public OrderedItem addItem(Long oid,OrderedItem item) {
         item.setOrder(orderService.getOrderByOid(oid));

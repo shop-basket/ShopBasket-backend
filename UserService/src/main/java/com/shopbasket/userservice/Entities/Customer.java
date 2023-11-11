@@ -4,20 +4,18 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
+@Setter
 @Entity
 @Table
 public class Customer extends Users{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     private String street;
     private String city;
     private String province;
     private Integer zipCode;
     @Builder
-    public Customer(String firstName, String lastName, String email, String password, Integer phoneNo,
-                    String profileURL,String street, String city,String province,Integer zipCode) {
-        super(firstName, lastName, email, password, phoneNo, profileURL);
+    public Customer(Integer id,String firstName, String lastName, String email, String password, Integer phoneNo,
+                    String profileURL,boolean enabled,String street, String city,String province,Integer zipCode) {
+        super(id, firstName, lastName, email, password, phoneNo, profileURL, enabled);
         this.street=street;
         this.city=city;
         this.province =province;

@@ -4,11 +4,8 @@ package com.shopbasket.userservice.Service;
 import com.shopbasket.userservice.DTO.AuthenticationRequest;
 import com.shopbasket.userservice.DTO.CustomerRegisterRequest;
 import com.shopbasket.userservice.DTO.EmployeeCreationResponse;
-import com.shopbasket.userservice.DTO.RegisterRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class UserValidationService extends CredentialValidation{

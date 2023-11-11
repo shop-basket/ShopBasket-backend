@@ -33,8 +33,9 @@ public class JwtService {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .claim("role", employee.getRole())
+                .claim("id",employee.getId())
                 .claim("username", employee.getUsername())
+                .claim("role", employee.getRole())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -70,14 +71,13 @@ public class JwtService {
     }
 
     public String generateTokenForCustomer(Customer customer) {
-        System.out.println("Customer from generate Token: "+customer);
         return generateTokenForCustomer(new HashMap<>(),customer);
     }
     private  String generateTokenForCustomer(Map<String, Object> extraClaims, Customer customer) {
-        System.out.println("From generateToken 2 :"+customer);
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
+                .claim("id",customer.getId())
                 .claim("username", customer.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))

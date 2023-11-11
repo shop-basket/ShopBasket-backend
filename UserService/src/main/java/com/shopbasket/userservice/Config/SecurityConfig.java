@@ -1,5 +1,6 @@
 package com.shopbasket.userservice.Config;
 
+import com.shopbasket.userservice.Entities.Customer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
