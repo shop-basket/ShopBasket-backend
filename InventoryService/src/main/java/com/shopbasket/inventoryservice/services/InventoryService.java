@@ -1,9 +1,5 @@
 package com.shopbasket.inventoryservice.services;
-
-import com.shopbasket.inventoryservice.dto.InventoryRequestDTO;
-import com.shopbasket.inventoryservice.dto.OrderItemDTO;
-import com.shopbasket.inventoryservice.dto.OrderRequestDTO;
-import com.shopbasket.inventoryservice.dto.ProductQuantityDetailsResponse;
+import com.shopbasket.inventoryservice.dto.*;
 import com.shopbasket.inventoryservice.entities.Inventory;
 import com.shopbasket.inventoryservice.entities.Product;
 import com.shopbasket.inventoryservice.enums.InventoryStatus;
@@ -14,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.util.UUID;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 @NoArgsConstructor
@@ -29,10 +27,12 @@ public class InventoryService {
         this.productService = productService;
     }
 
+    // Bussiness Logic for Adding a Inventory
+    // This method is called by the InventoryController to add a new inventory.
     public void addInventory(InventoryRequestDTO inventoryRequestDTO) {
-        String randomString = RandomStringUtils.randomAlphabetic(2, 3);
-        String inventoryBatchId = inventoryRequestDTO.getSkuCode() +"_"+ randomString;
-        String inventoryStatus = (inventoryRequestDTO.getQuantity() > 0) ? "IN_STOCK" : "OUT_OF_STOCK";
+        String randomString = RandomStringUtils.randomAlphabetic(2, 3); // Generate a random string of length 2 or 3
+        String inventoryBatchId = inventoryRequestDTO.getSkuCode() +"_"+ randomString;// Generate a unique inventory batch ID
+        String inventoryStatus = (inventoryRequestDTO.getQuantity() > 0) ? "IN_STOCK" : "OUT_OF_STOCK";// Set the inventory status based on the quantity
         Inventory inventory=Inventory.builder()
                 .inventoryBatchId(inventoryBatchId)
                 .quantity(inventoryRequestDTO.getQuantity())
@@ -108,4 +108,83 @@ public class InventoryService {
         }
         return true;
     }
+    public void processOrderV1(OrderRequestDTO orderRequest) {
+        for (OrderItemDTO orderItem : orderRequest.getOrderItems()) {
+            String skuCode = orderItem.getSkuCode();
+            int orderedQuantity = orderItem.getOrderedQuantity();
+
+            List<Inventory> inventories = inventoryRepository.findInventoriesBySkuCodeOrderByExpiryDate(skuCode);
+
+            for (Inventory inventory : inventories) {
+                int availableQuantity = inventory.getQuantity();
+
+                if (orderedQuantity > 0) {
+                    int quantityToDeduct = Math.min(orderedQuantity, availableQuantity);
+
+                    // Deduct the quantity from the inventory
+                    inventory.setQuantity(availableQuantity - quantityToDeduct);
+                    updateInventory(inventory);
+
+                    orderedQuantity -= quantityToDeduct;
+                } else {
+                    break; // No need to check further inventories
+                }
+            }
+        }
+    }
+
+
+//    public void processOrder(OrderRequestDTO orderRequest) {
+//        CartDTO cartDTO = createCartFromOrder(orderRequest);
+//        cartService.saveCart(cartDTO);
+//        deductOrderedQuantitiesFromInventory(orderRequest);
+//    }
+
+//    private CartDTO createCartFromOrder(OrderRequestDTO orderRequest) {
+//        // Create a CartDTO and CartItemDTOs from the order request
+//        CartDTO cartDTO = new CartDTO();
+//        cartDTO.setId(orderRequest.getOrderId());
+//        cartDTO.setWarehouseKeeperID(orderRequest.getWarehouseKeeperID());
+//        cartDTO.setDeliveryManId(orderRequest.getDeliveryManId());
+//
+//        List<CartItemDTO> cartItems = orderRequest.getOrderItems().stream()
+//                .map(orderItem -> {
+//                    CartItemDTO cartItemDTO = new CartItemDTO();
+//                    cartItemDTO.setSkuCode(orderItem.getSkuCode());
+//                    cartItemDTO.setOrderedQuantity(orderItem.getOrderedQuantity());
+//                    return cartItemDTO;
+//                })
+//                .collect(Collectors.toList());
+//
+//        cartDTO.setCartItems(cartItems);
+//        return cartDTO;
+//    }
+//    private void deductOrderedQuantitiesFromInventory(OrderRequestDTO orderRequest) {
+//        for (OrderItemDTO orderItem : orderRequest.getOrderItems()) {
+//            String skuCode = orderItem.getSkuCode();
+//            int orderedQuantity = orderItem.getOrderedQuantity();
+//
+//            List<Inventory> inventories = inventoryRepository.findInventoriesBySkuCodeOrderByExpiryDate(skuCode);
+//
+//            for (Inventory inventory : inventories) {
+//                int availableQuantity = inventory.getQuantity();
+//
+//                if (orderedQuantity > 0) {
+//                    int quantityToDeduct = Math.min(orderedQuantity, availableQuantity);
+//
+//                    // Deduct the quantity from the inventory
+//                    inventory.setQuantity(availableQuantity - quantityToDeduct);
+//                    updateInventory(inventory);
+//
+//                    orderedQuantity -= quantityToDeduct;
+//                } else {
+//                    break;
+//                }
+//            }
+//        }
+//    }
+
+
+
+
 }

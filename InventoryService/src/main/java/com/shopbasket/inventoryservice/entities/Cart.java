@@ -1,6 +1,7 @@
 package com.shopbasket.inventoryservice.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.shopbasket.inventoryservice.dto.CartItemDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

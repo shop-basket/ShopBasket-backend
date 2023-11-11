@@ -12,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
+//Adapter class for InventoryRequestDTO
 public class InventoryRequestDTO {
 
     private String skuCode;

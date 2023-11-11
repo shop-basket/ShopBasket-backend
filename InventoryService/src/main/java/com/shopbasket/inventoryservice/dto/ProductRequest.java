@@ -9,6 +9,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//Adapter class for ProductRequest
 
 public class ProductRequest {
     private String productName;

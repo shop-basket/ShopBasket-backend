@@ -9,5 +9,7 @@ import java.util.List;
 @Builder
 public class OrderRequestDTO {
     private String orderId;
+    private String warehouseKeeperID;
+    private String deliveryManId;
     private List<OrderItemDTO> orderItems;
 }

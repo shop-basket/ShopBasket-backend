@@ -65,6 +65,10 @@ public class InventoryController {
             return ResponseEntity.ok("Some items in the order are out of stock.");
         }
     }
+    @PostMapping("/processOrder")  // Define the endpoint URL for order processing
+    public void processOrder(@RequestBody OrderRequestDTO orderRequest) {
+        inventoryService.processOrderV1(orderRequest);
+    }
 
 
 
