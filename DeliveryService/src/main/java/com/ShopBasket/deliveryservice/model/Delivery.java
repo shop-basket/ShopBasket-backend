@@ -25,6 +25,8 @@ public class Delivery {
     private Long orderManagerId;
     private Long orderId;
     private Date date;
+    private String address;
+    private String contactNumber;
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status = DeliveryStatus.ACCEPTED;
 }

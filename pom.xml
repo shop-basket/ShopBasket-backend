@@ -11,8 +11,14 @@
 	<groupId>com.ShopBasket</groupId>
 	<artifactId>ShopBasket-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>ShopBasket-backend</name>
 	<description>Demo project for Spring Boot</description>
+	<modules>
+		<module>Gateway</module>
+        <module>DiscoveryServer</module>
+    </modules>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
