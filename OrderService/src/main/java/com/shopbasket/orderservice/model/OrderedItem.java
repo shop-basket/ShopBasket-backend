@@ -17,8 +17,8 @@ public class OrderedItem {
     @Column(name = "item_id")
     private Long itemId;
 
-    @Column(name = "pid")
-    private Long pid;
+    @Column(name = "skuCode")
+    private String skuCode;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -28,8 +28,8 @@ public class OrderedItem {
     @JsonBackReference
     private Order order;
 
-    public OrderedItem(Long pid, Integer quantity) {
-        this.pid = pid;
+    public OrderedItem(String skuCode, Integer quantity) {
+        this.skuCode = skuCode;
         this.quantity = quantity;
     }
 }

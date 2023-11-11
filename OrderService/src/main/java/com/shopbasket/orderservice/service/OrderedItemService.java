@@ -26,8 +26,8 @@ public class OrderedItemService {
         this.orderService = orderService;
     }
 
-    public ResponseEntity<ProductWrapper> getProduct(Long pid){
-        ResponseEntity<ProductWrapper> product = productInterface.getProductByPid(pid);
+    public ResponseEntity<ProductWrapper> getProduct(String skuCode){
+        ResponseEntity<ProductWrapper> product = productInterface.getProductBySkuCode(skuCode);
         return product;
     }
 

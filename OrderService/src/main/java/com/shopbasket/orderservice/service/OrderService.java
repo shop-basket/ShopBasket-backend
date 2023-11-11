@@ -94,16 +94,13 @@ public class OrderService {
     }
 
     public Order addItem(Long oid, OrderedItem item) {
-        Optional<Order> optionalOrder = orderRepository.findById(oid);
-        if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
-            List<OrderedItem> currentItems = order.getItems();
-            currentItems.add(item);
-            order.setTotalAmount(calculateTotalAmount(currentItems));
-            order.setItems(currentItems);
-            return orderRepository.save(order);
-        }
-        return null;
+        Order order = orderRepository.findById(oid)
+                .orElseThrow(() -> new CustomNotFoundException("Order with ID " + oid + " not found"));
+        List<OrderedItem> currentItems = order.getItems();
+        currentItems.add(item);
+        order.setTotalAmount(calculateTotalAmount(currentItems));
+        order.setItems(currentItems);
+        return orderRepository.save(order);
     }
 
     public List<Order> getOrderByCid(Long cid) {

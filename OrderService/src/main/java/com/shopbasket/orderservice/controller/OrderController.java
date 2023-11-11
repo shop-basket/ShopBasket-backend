@@ -1,6 +1,7 @@
 package com.shopbasket.orderservice.controller;
 
 import com.shopbasket.orderservice.feign.NotificationInterface;
+import com.shopbasket.orderservice.feign.ProductInterface;
 import com.shopbasket.orderservice.model.*;
 import com.shopbasket.orderservice.service.OrderService;
 
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,6 +23,7 @@ public class OrderController {
     private final OrderService orderService;
     private final OrderedItemService orderedItemService;
     NotificationInterface notificationInterface;
+    ProductInterface productInterface;
 
     @Autowired
     public OrderController(OrderService orderService, OrderedItemService orderedItemService) {
@@ -30,6 +31,7 @@ public class OrderController {
         this.orderedItemService = orderedItemService;
     }
 
+    // Retrieve delivery order details by order ID
     @GetMapping("/getDeliveryOrder/{oid}")
     public ResponseEntity<DeliveryOrderDTO> getDeliveryOrderByOid(@PathVariable Long oid){
         Order order = orderService.getOrderByOid(oid);
@@ -37,6 +39,7 @@ public class OrderController {
         return ResponseEntity.ok(deliveryOrder);
     }
 
+    // Create a new order
     @PostMapping("/create")
     public ResponseEntity<Order> createOrder(@RequestBody Order order){
         Order createdOrder = orderService.createOrder(order);
@@ -46,6 +49,7 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
 
+    // Add items to an existing order
     @PutMapping("/addItem/{oid}")
     public ResponseEntity<Order> addItems(@PathVariable Long oid, @RequestBody OrderedItem item){
         Order updatedOrder = orderService.addItem(oid,item);
@@ -56,15 +60,7 @@ public class OrderController {
         return ResponseEntity.ok(updatedOrder);
     }
 
-    @GetMapping("/{uid}")
-    public ResponseEntity<List<Order>> getOrderByCid(@PathVariable Long uid){
-        List<Order> order = orderService.getOrderByCid(uid);
-        if (order == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(order);
-    }
-
+    // Set Order Manager for an order and notify them
     @PutMapping("/setOM/{oid}")
     public ResponseEntity<Order> setOrderManager(@PathVariable Long oid, @RequestParam Long eid) {
         if (oid == null || eid == null) {
@@ -74,9 +70,13 @@ public class OrderController {
         if (updatedOrder == null) {
             return ResponseEntity.notFound().build();
         }
+        // Notify the Order Manager
+//        NotificationRequest notificationRequest = new NotificationRequest(oid, eid, "You have a new order. Do you accept?");
+//        notificationInterface.sendNotification(notificationRequest);
         return ResponseEntity.ok(updatedOrder);
     }
 
+    // Set Warehouse Keeper for an order and notify them
     @PutMapping("/setWK/{oid}")
     public ResponseEntity<Order> setWarehouseKeeper(@PathVariable Long oid, @RequestParam Long eid) {
         if (oid == null || eid == null) {
@@ -86,9 +86,13 @@ public class OrderController {
         if (updatedOrder == null) {
             return ResponseEntity.notFound().build();
         }
+        // Notify the Warehouse Keeper
+//        NotificationRequest notificationRequest = new NotificationRequest(oid, eid, "You have a new order. Do you accept?");
+//        notificationInterface.sendNotification(notificationRequest);
         return ResponseEntity.ok(updatedOrder);
     }
 
+    // Set Delivery Person for an order and notify them
     @PutMapping("/setDP/{oid}")
     public ResponseEntity<Order> setDeliveryPerson(@PathVariable Long oid, @RequestParam Long eid) {
         if (oid == null || eid == null) {
@@ -98,9 +102,13 @@ public class OrderController {
         if (updatedOrder == null) {
             return ResponseEntity.notFound().build();
         }
+        // Notify the Delivery Person
+//        NotificationRequest notificationRequest = new NotificationRequest(oid, eid, "You have a new order. Do you accept?");
+//        notificationInterface.sendNotification(notificationRequest);
         return ResponseEntity.ok(updatedOrder);
     }
 
+    // Set Cashier for an order and notify them
     @PutMapping("/setCshr/{oid}")
     public ResponseEntity<Order> setCashier(@PathVariable Long oid, @RequestParam Long eid) {
         if (oid == null || eid == null) {
@@ -110,9 +118,13 @@ public class OrderController {
         if (updatedOrder == null) {
             return ResponseEntity.notFound().build();
         }
+        // Notify the Cashier
+//        NotificationRequest notificationRequest = new NotificationRequest(oid, eid, "You have a new order. Do you accept?");
+//        notificationInterface.sendNotification(notificationRequest);
         return ResponseEntity.ok(updatedOrder);
     }
 
+    // Set status for an order
     @PutMapping("/setStatus/{oid}")
     public ResponseEntity<Order> setStatus(@PathVariable Long oid, @RequestBody Map<String, String> statusMap) {
         String statusValue = statusMap.get("status");
@@ -123,6 +135,9 @@ public class OrderController {
                 if (updatedOrder == null) {
                     return ResponseEntity.notFound().build();
                 }
+                if (status.toString().equals("SHIPPED")){
+//                    productInterface.updateStock();
+                }
                 return ResponseEntity.ok(updatedOrder);
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.badRequest().build();
@@ -131,6 +146,7 @@ public class OrderController {
         return ResponseEntity.badRequest().build();
     }
 
+    // Show items in the cart for a customer
     @GetMapping("/showCart/{cid}")
     public ResponseEntity<List<Order>> showCart(@PathVariable Long cid){
         List<Order> orders = orderService.getOrderByCid(cid);
@@ -143,17 +159,21 @@ public class OrderController {
         return ResponseEntity.ok(myCart);
     }
 
+    // Retrieve order details by order ID
     @GetMapping("/getOrder/{oid}")
     public ResponseEntity<Order> getOrderByOid(@PathVariable Long oid){
         Order order = orderService.getOrderByOid(oid);
         return ResponseEntity.ok(order);
     }
 
-    @PostMapping("/assign/{orderId}")
-    public ResponseEntity<String> assignWarehouseKeeper(@PathVariable Long orderId, @RequestParam Long warehouseKeeperId) {
-        orderService.getOrderByOid(orderId).setWkid(warehouseKeeperId);
-        NotificationRequest notificationRequest = new NotificationRequest(orderId, warehouseKeeperId, "You have a new order. Do you accept?");
-        notificationInterface.sendNotification(notificationRequest);
-        return ResponseEntity.ok("Warehouse keeper notified");
+
+    // Retrieve orders by customer ID
+    @GetMapping("/getOrderByCid/{uid}")
+    public ResponseEntity<List<Order>> getOrderByCid(@PathVariable Long uid){
+        List<Order> order = orderService.getOrderByCid(uid);
+        if (order == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(order);
     }
 }
