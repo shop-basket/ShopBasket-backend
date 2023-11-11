@@ -1,7 +1,6 @@
 package com.ShopBasket.deliveryservice.service;
 
 
-import com.ShopBasket.deliveryservice.enums.DeliveryStatus;
 import com.ShopBasket.deliveryservice.model.Delivery;
 import com.ShopBasket.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,20 +49,6 @@ public class DeliveryService {
             return deliveryRepository.save(existingDelivery);
         } catch (Exception e) {
             throw new RuntimeException("Failed to update the delivery: " + e.getMessage());
-        }
-    }
-
-    public Delivery updateDeliveryStatus(Long id, DeliveryStatus deliveryStatus) {
-        try {
-            // Get the delivery by id
-            Delivery existingDelivery = deliveryRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Delivery not found with id: " + id));
-            // Update the delivery status
-            existingDelivery.setStatus(deliveryStatus);
-            // Save the updated delivery
-            deliveryRepository.save(existingDelivery);
-            return existingDelivery;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to update the delivery status: " + e.getMessage());
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.ShopBasket.deliveryservice.controller;
 
-import com.ShopBasket.deliveryservice.enums.DeliveryStatus;
 import com.ShopBasket.deliveryservice.model.Delivery;
 import com.ShopBasket.deliveryservice.service.DeliveryService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/delivery-service")
+@RequestMapping("/api/delivery")
 @RequiredArgsConstructor
 public class DeliveryController {
 
@@ -66,21 +65,6 @@ public class DeliveryController {
 
             Delivery updatedDelivery = deliveryService.updateDelivery(id, delivery);
             return ResponseEntity.status(HttpStatus.OK).body(updatedDelivery);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Delivery not found with id: " + id);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
-        }
-    }
-
-    // Update a delivery status
-    @PutMapping("/update-delivery-status/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> updateDeliveryStatus(@PathVariable Long id, @RequestBody DeliveryStatus deliveryStatus) {
-        try {
-
-            Delivery updatedDeliveryStatus = deliveryService.updateDeliveryStatus(id, deliveryStatus);
-            return ResponseEntity.status(HttpStatus.OK).body(updatedDeliveryStatus);
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Delivery not found with id: " + id);
         } catch (Exception e) {
