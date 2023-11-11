@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient("Inventory-Service")
 public interface ProductInterface {
 
-    @GetMapping("product/{skuCode}")
-    ResponseEntity<ProductWrapper> getProductBySkuCode (@PathVariable String skuCode);
-
     @PostMapping("/check-order")
     ResponseEntity<String> prepareAndCheckOrder(@RequestBody OrderRequestDTO orderRequestDTO);
 

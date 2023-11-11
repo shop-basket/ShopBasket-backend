@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/ShopBasket/api/order-service")
 @CrossOrigin(allowedHeaders = "*" ,origins = "*")
 public class OrderController {
 
